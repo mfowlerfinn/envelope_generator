@@ -1,0 +1,147 @@
+html {
+  box-sizing: border-box;
+  font-size: 10px;
+  /*background: linear-gradient(0deg, #3f87a6 0%, #0d47a1 100%);*/
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  text-align: center;
+  font-family: Monaco, monospace;
+  /*background: gray;*/
+}
+
+#site-container {
+/*	margin-top: 20px;*/
+}
+
+#display-container {
+	width: 100%;
+	/*display: flex;*/
+/*	flex-direction: row;*/
+	margin: auto;
+	display: block;
+	background: rgb(68, 68, 68);
+}
+
+#controls{
+	background: gray;
+	margin: 0;
+	height: 50px;
+	width: 100%;
+}
+
+form {
+	display: flex;
+}
+
+#canvas {
+	position: relative;
+	/*width:100%;*/
+	margin: 10px;
+}
+
+#data {
+	background: gray;
+	height: 50px;
+	margin: 0;
+	width: 100%;
+}
+
+.sidebar {
+	margin-right: 10px;
+	margin-left: 10px;
+	/*border: 2px solid black;*/
+	width: 50px;
+	z-index: 1;
+}
+
+.workspace {
+	/*background: gray;*/
+	/*position: absolute;*/
+	height: 500px;
+	width: 1000px;
+	/*z-index: 1;*/
+	
+}
+
+#envelope {
+	position: absolute;
+	width: 800px;
+	height: 400px;
+	background: rgba(255,255,255,0.9);
+	/*border: 2px solid black;*/
+	/*z-index: 2;*/
+	box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.4);
+	/*padding: calc(72px * (1/8)); */
+}
+
+.address_container {
+/*	display: block;*/
+	position: absolute;
+	background: rgba(0,0,0,0.5);
+	/*height: 100px;*/
+	width: 300px;
+	display:flex;
+	flex-direction: column;
+	/*align-items: baseline;*/
+	/*margin: 20px;*/
+}
+
+.text {
+	/*background: blue;*/
+	/*margin: 2px;*/
+	/*justify-content: left;*/
+	/*flex:1;*/
+	/*margin:auto;*/
+}
+
+#address_return {
+	margin: calc(72px * (0.125));
+	text-align: left;
+	font-size: 12pt;
+}
+
+#address_destination {
+	margin-left: calc(72px * (1/2));
+	margin-right: calc(72px * (1/2));
+	margin-bottom: calc(72px * (5/8));
+	height: calc(72px * (2.75));
+	width: calc(100% - 72px);
+	bottom: 0;
+	font-size: 20pt;
+}
+
+.address_dest_group{
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+	text-align: left;
+}
+
+#stamp{
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: 1px solid gray;
+	/*background: red;*/
+	width: calc(72px * (0.87));
+	height: calc(72px * (0.979));
+	margin: calc(72px * (0.125));
+	text-align: center;
+
+}
+
+.name {
+	/*font-size: 120%;*/
+	/*font-weight: 600;*/
+}
+
+

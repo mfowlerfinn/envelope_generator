@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>pdf mock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="site-container">
+    <div id="display-container">
+      <div id="controls" class="sidebar">
+        <form id="user-input" name="user-input">
+          <!--           <select name="paperSize" id="paperSize">
+            <option value="a4">a4</option>
+            <option value="a5">a5</option>
+            <option value="a6">a6</option>
+          </select> -->
+          <input id="width" name="width" type="number" step="0.125" placeholder="width" required>
+          <input id="height" name="height" type="number" step="0.125" placeholder="height" required>
+          <input type="submit" name="submit the form">
+        </form>
+      </div>
+      <canvas id="canvas" class="workspace adjust">CANVAS NOT SUPPORTED
+      </canvas>
+      <div id="envelope" class="paper adjust">
+        <div id="address_return" name="address_return" class="address_container adjust">
+          <div class="text return name">RETURN NAME</div>
+          <div class="text return">123 SOME STREET</div>
+          <div class="text return">ANYTOWN, ST 12345</div>
+        </div>
+        <div id="address_destination" name="address_destination" class="address_container adjust">
+          <div class="address_dest_group">
+            <div id="d1" class="text destination name">DESTINATION NAME</div>
+            <div id="d2" class="text destination">123 SOME STREET</div>
+            <div id="d3" class="text destination">ANYTOWN, ST 12345</div>
+          </div>
+        </div>
+        <div id="stamp"></div>
+      </div>
+      <div id="data" class="sidebar"></div>
+    </div>
+  </div>
+  <script>
+  const user = document.querySelector('#user-input');
+  const adjustableDivs = document.querySelectorAll('.text');
+  const envelope = document.querySelector('#envelope');
+  const canvas = document.querySelector('#canvas');
+  const addressReturn = document.querySelector('#address_return');
+  const addressDest = document.querySelector('#address_destination');
+  const ctx = canvas.getContext('2d');
+  const pdfDPI = 72;
+  let canvasX;
+  let canvasY;
+  let originX;
+  let originY;
+  let User = {};
+
+  function center(parent, child) {
+    // console.log({ parent, child });
+    let marginX = (parent.offsetWidth - child.offsetWidth) / 2;
+    let marginY = (parent.offsetHeight - child.offsetHeight) / 2;
+    if (parent === canvas) {
+      console.log("parent = canvas");
+      originX = marginX;
+      originY = marginY;
+      marginX += parent.offsetLeft;
+      marginY += parent.offsetTop;
+    }
+    // let newPosX = parent.offsetLeft + marginX;
+    // let newPosY = parent.offsetTop + marginY;
+    // let moveX = child.offsetLeft + newPosX;
+    // let moveY = newPosY - child.offsetTop;
+    // console.log({ marginX, newPosX, moveX, marginY, newPosY, moveY });
+    // child.style.transform = `translate(${moveX}px, ${moveY}px`;
+    child.style.left = marginX + "px";
+    child.style.top = marginY + "px";
+    // console.log({ moveX, moveY });
+  }
+
+  function canvasInit(x = 1000, y = 500) {
+    canvas.style.width = `${x}px`; // Set display size (css pixels).
+    canvas.style.height = `${y}px`;
+    canvasX = x;
+    canvasY = y;
+    let scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+    canvas.width = x * scale; // Set actual size in memory (scaled to account for extra pixel density).
+    canvas.height = y * scale;
+    ctx.scale(scale, scale); // Normalize coordinate system to use css pixels.
+  }
+
+  function displayGridLines(color = 'lightblue', width = 1, offsetX = originX, offsetY = originY, interval = pdfDPI) {
+    while (offsetX > interval) offsetX -= interval;
+    while (offsetY > interval) offsetY -= interval;
+    if (!offsetX) offsetX = (canvasX % pdfDPI) / 2;
+    if (!offsetY) offsetY = (canvasY % pdfDPI) / 2;
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    for (i = offsetX; i < canvasX; i) {
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, canvasY);
+      ctx.stroke();
+      i += interval;
+    }
+    for (i = offsetY; i < canvasY; i) {
+      ctx.moveTo(0, i);
+      ctx.lineTo(canvasX, i);
+      ctx.stroke();
+      i += interval;
+    }
+  }
+
+  function setup() {
+    canvasInit();
+    if (User.width) {
+      pxX = User.width * pdfDPI;
+      pxY = User.height * pdfDPI;
+      envelope.style.width = pxX + "px";
+      envelope.style.height = pxY + "px";
+    };
+    center(canvas, envelope);
+    // center(envelope, addressDest);
+    displayGridLines();
+  }
+
+  function handleResize() {
+    center(canvas, envelope);
+    displayGridLines();
+  }
+
+  function handleClick(e) {
+    event.stopPropagation();
+    getCoords(e.target);
+
+  }
+
+function getCoords(origin) {
+    // console.log(origin);
+    let xCoord = addOffsets("x", origin);
+    let yCoord = addOffsets("y", origin);
+    function addOffsets(dir, target) {
+    	let offset = 0;
+	    for(i = 0; i < 20; i++) {
+			(dir === "x") ? offset += target.offsetLeft : offset += target.offsetTop; 
+			target = target.offsetParent;
+			// console.log(offset);
+			// console.log(target.id);
+			if (target.id === "envelope") {
+				i = 20;
+			}
+	    }
+	    return offset;
+	}
+	console.log({xCoord, yCoord});
+}
+
+  function handleUser(e) {
+    e.preventDefault();
+    for (i = 0; i < e.target.length - 1; i++) {
+      let name = e.target[i].name;
+      let value = e.target[i].value;
+      User[`${name}`] = value;
+    }
+    console.log(User);
+    setup();
+  }
+
+  user.addEventListener("submit", handleUser);
+  window.addEventListener("load", setup);
+  window.addEventListener("resize", handleResize)
+  adjustableDivs.forEach(adjustableDiv => adjustableDiv.addEventListener('click', handleClick));
+  </script>
+</body>
+
+</html>
