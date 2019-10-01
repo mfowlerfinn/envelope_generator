@@ -26,9 +26,9 @@
       </canvas>
       <div id="envelope" class="paper adjust">
         <div id="address_return" name="address_return" class="address_container adjust">
-          <div class="text return name">RETURN NAME</div>
-          <div class="text return">123 SOME STREET</div>
-          <div class="text return">ANYTOWN, ST 12345</div>
+          <div id="r1" class="text return name">RETURN NAME</div>
+          <div id="r2" class="text return">123 SOME STREET</div>
+          <div id="r3" class="text return">ANYTOWN, ST 12345</div>
         </div>
         <div id="address_destination" name="address_destination" class="address_container adjust">
           <div class="address_dest_group">
@@ -55,7 +55,8 @@
   let canvasY;
   let originX;
   let originY;
-  let User = {};
+  let User = { height:"5", width:"9.5" };
+  let content = [];
 
   function center(parent, child) {
     // console.log({ parent, child });
@@ -132,7 +133,6 @@
   function handleClick(e) {
     event.stopPropagation();
     getCoords(e.target);
-
   }
 
 function getCoords(origin) {
@@ -152,7 +152,9 @@ function getCoords(origin) {
 	    }
 	    return offset;
 	}
-	console.log({xCoord, yCoord});
+  // console.log([xCoord, yCoord]);
+  return [xCoord, yCoord];
+
 }
 
   function handleUser(e) {
@@ -164,6 +166,19 @@ function getCoords(origin) {
     }
     console.log(User);
     setup();
+  }
+
+  function test() {
+    let i=0;
+    content = [];
+    adjustableDivs.forEach(item => {
+      content[i] = getCoords(item);
+      console.log(item);
+      content[i].push(item.innerText);
+      content[i].push(item.id);
+      i++;
+      });
+    console.log(content); //and USER
   }
 
   user.addEventListener("submit", handleUser);
