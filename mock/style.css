@@ -22,6 +22,11 @@ body {
 /*	margin-top: 20px;*/
 }
 
+#file-input-label {
+	display: block;
+	background: red;
+}
+
 #display-container {
 	width: 100%;
 	/*display: flex;*/
@@ -34,12 +39,15 @@ body {
 #controls{
 	background: gray;
 	margin: 0;
-	height: 50px;
+	/*height: 50px;*/
 	width: 100%;
+	padding: 10px;
+	/*display: flex;*/
 }
 
 form {
-	display: flex;
+	/*display: flex;*/
+	padding-bottom: 10px;
 }
 
 #canvas {

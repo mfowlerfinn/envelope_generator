@@ -17,10 +17,14 @@
             <option value="a5">a5</option>
             <option value="a6">a6</option>
           </select> -->
-          <input id="width" name="width" type="number" step="0.125" placeholder="width" required>
-          <input id="height" name="height" type="number" step="0.125" placeholder="height" required>
-          <input type="submit" name="submit the form">
+          <input id="width" name="width" type="number" step="0.125" placeholder="inches wide" required>
+          <input id="height" name="height" type="number" step="0.125" placeholder="inches high" required>
+          <input id="name" name="name" type="text" placeholder="return name" required>
+          <input id="address" name="address" type="text" placeholder="address" required>
+          <input id="city" name="city" type="text" placeholder="city, state zip" required>
+          <input type="submit" name="submit the form" value="Update Envelope">
         </form>
+        <input type="file" id="file-input" accept="text/csv" value="test">
       </div>
       <canvas id="canvas" class="workspace adjust">CANVAS NOT SUPPORTED
       </canvas>
@@ -55,7 +59,7 @@
   let canvasY;
   let originX;
   let originY;
-  let User = { height:"5", width:"9.5" };
+  let User = { height: "5", width: "9.5" };
   let content = [];
 
   function center(parent, child) {
@@ -63,7 +67,7 @@
     let marginX = (parent.offsetWidth - child.offsetWidth) / 2;
     let marginY = (parent.offsetHeight - child.offsetHeight) / 2;
     if (parent === canvas) {
-      console.log("parent = canvas");
+      // console.log("parent = canvas");
       originX = marginX;
       originY = marginY;
       marginX += parent.offsetLeft;
@@ -119,7 +123,10 @@
       pxY = User.height * pdfDPI;
       envelope.style.width = pxX + "px";
       envelope.style.height = pxY + "px";
-    };
+    }
+    if (User.name) document.querySelector('#r1').innerText = User.name;
+    if (User.address) document.querySelector('#r2').innerText = User.address;
+    if (User.city) document.querySelector('#r3').innerText = User.city;
     center(canvas, envelope);
     // center(envelope, addressDest);
     displayGridLines();
@@ -135,41 +142,42 @@
     getCoords(e.target);
   }
 
-function getCoords(origin) {
+  function getCoords(origin) {
     // console.log(origin);
     let xCoord = addOffsets("x", origin);
     let yCoord = addOffsets("y", origin);
-    function addOffsets(dir, target) {
-    	let offset = 0;
-	    for(i = 0; i < 20; i++) {
-			(dir === "x") ? offset += target.offsetLeft : offset += target.offsetTop; 
-			target = target.offsetParent;
-			// console.log(offset);
-			// console.log(target.id);
-			if (target.id === "envelope") {
-				i = 20;
-			}
-	    }
-	    return offset;
-	}
-  // console.log([xCoord, yCoord]);
-  return [xCoord, yCoord];
 
-}
+    function addOffsets(dir, target) {
+      let offset = 0;
+      for (i = 0; i < 20; i++) {
+        (dir === "x") ? offset += target.offsetLeft: offset += target.offsetTop;
+        target = target.offsetParent;
+        // console.log(offset);
+        // console.log(target.id);
+        if (target.id === "envelope") {
+          i = 20;
+        }
+      }
+      return offset;
+    }
+    // console.log([xCoord, yCoord]);
+    return [xCoord, yCoord];
+
+  }
 
   function handleUser(e) {
     e.preventDefault();
     for (i = 0; i < e.target.length - 1; i++) {
       let name = e.target[i].name;
       let value = e.target[i].value;
-      User[`${name}`] = value;
+      User[name] = value;
     }
     console.log(User);
     setup();
   }
 
   function test() {
-    let i=0;
+    let i = 0;
     content = [];
     adjustableDivs.forEach(item => {
       content[i] = getCoords(item);
@@ -177,7 +185,7 @@ function getCoords(origin) {
       content[i].push(item.innerText);
       content[i].push(item.id);
       i++;
-      });
+    });
     console.log(content); //and USER
   }
 
@@ -185,6 +193,74 @@ function getCoords(origin) {
   window.addEventListener("load", setup);
   window.addEventListener("resize", handleResize)
   adjustableDivs.forEach(adjustableDiv => adjustableDiv.addEventListener('click', handleClick));
+
+  //file loader begins---
+  let csvData = [];
+
+  document.querySelector("#file-input").addEventListener('change', function() {
+    // files that user has chosen
+    var all_files = this.files;
+    if (all_files.length == 0) {
+      alert('Error : No file selected');
+      return;
+    }
+    // first file selected by user
+    var file = all_files[0];
+
+    // files types allowed
+    var allowed_types = ['text/csv'];
+    if (allowed_types.indexOf(file.type) == -1) {
+      alert('Error : Incorrect file type');
+      return;
+    }
+
+    // Max 2 MB allowed
+    var max_size_allowed = 2 * 1024 * 1024
+    if (file.size > max_size_allowed) {
+      alert('Error : Exceeded size 2MB');
+      return;
+    }
+
+    // file validation is successfull
+    // we will now read the file
+
+    var reader = new FileReader();
+
+    // file reading started
+    reader.addEventListener('loadstart', function() {
+      // document.querySelector("#file-input-label").style.display = 'none'; 
+    });
+
+    // file reading finished successfully
+    reader.addEventListener('load', function(e) {
+      var text = e.target.result;
+      processData(text);
+
+      // document.querySelector("#file-input-label").style.display = 'block'; 
+    });
+
+    function processData(csv) {
+      var allTextLines = csv.split(/\r\n|\r|\n/);
+      csvData = [];
+      for (var i = 0; i < allTextLines.length; i++) {
+        var data = allTextLines[i].split(/,/);
+        var tarr = [];
+        for (var j = 0; j < data.length; j++) {
+          let str = data[j];
+          tarr.push(str);
+        }
+        csvData.push(tarr);
+      }
+      console.log(csvData);
+    }
+
+    // const addressObject = (keys...)
+
+
+
+    // read as text file
+    reader.readAsText(file);
+  });
   </script>
 </body>
 
