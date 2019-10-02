@@ -1,38 +1,49 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <style>
-  body {
-    width: 1230px;
-    margin: 20px auto;
-    font-family: Georgia;
-  }
-  
-  h1 {
-    margin: 0;
-  }
-  
-  a {
-    color: blue;
-  }
-  
-/*  #editor {
-    width: 600px;
-    height: 775px;
-    margin-right: 20px;
-    display: inline-block;
-  }*/
-  
-  iframe {
-    border: 1px solid black;
-  }
-  </style>
+  <meta charset="UTF-8">
+  <title>pdf mock</title>
+  <link rel="stylesheet" href="./assets/style.css">
 </head>
-<body>
-  <h1>PDFKit Browser Demo (bundled with webpack)</h1>
-  <p><a href="http://pdfkit.org/">Website</a> | <a href="http://github.com/foliojs/pdfkit">Github</a></p>
-  <!-- <div id="editor"></div> -->
-  <iframe width="600" height="775"></iframe>  
+
+<body> 
+  <div id="site-container">
+    <div id="display-container">
+      <div id="controls" class="sidebar">
+        <form id="user-input" name="user-input">
+          <input id="width" name="width" type="number" step="0.125" placeholder="inches wide" required>
+          <input id="height" name="height" type="number" step="0.125" placeholder="inches high" required>
+          <input id="name" name="name" type="text" placeholder="return name" required>
+          <input id="address" name="address" type="text" placeholder="address" required>
+          <input id="city" name="city" type="text" placeholder="city, state zip" required>
+          <input type="submit" name="submit the form" value="Update Envelope">
+        </form>
+        <input type="file" id="file-input" accept="text/csv" value="test">
+        <button id="run" onclick="pdfMagic()">Create PDF</button>
+      </div>
+      <canvas id="canvas" class="workspace adjust">CANVAS NOT SUPPORTED
+      </canvas>
+      <div id="envelope" class="paper adjust">
+        <div id="address_return" name="address_return" class="address_container adjust">
+          <div id="r1" class="text return name">RETURN NAME</div>
+          <div id="r2" class="text return">123 SOME STREET</div>
+          <div id="r3" class="text return">ANYTOWN, ST 12345</div>
+        </div>
+        <div id="address_destination" name="address_destination" class="address_container adjust">
+          <div class="address_dest_group">
+            <div id="d1" class="text destination name">DESTINATION NAME</div>
+            <div id="d2" class="text destination">123 SOME STREET</div>
+            <div id="d3" class="text destination">ANYTOWN, ST 12345</div>
+          </div>
+        </div>
+        <div id="stamp"></div>
+      </div>
+      <div id="data" class="sidebar"></div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./app_front.js"></script>
+   </script>
 </body>
+
 </html>
