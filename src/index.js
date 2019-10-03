@@ -7,10 +7,12 @@ let w;
 let docDefinition = {};
 
 const runButton = document.querySelector('#run');
+let downloadButton = document.querySelector('#download');
+let downloadUrl = "";
 runButton.addEventListener('click', run);
 
 function run() {
-  console.log('clicked to run...');
+  // console.log('clicked to run...');
   getTextLayout();
   //ALL DIMENSIONS IN PDF POINTS (72 per inch)
   w = Number(User.width) * 72;
@@ -48,9 +50,9 @@ function makePDF() {
 
   for (let i = 0; i < csvData.length; i++) {
     let row = i % (textLayout.length);
-    let progress = `working on ${i} of ${csvData.length}`;
-    console.log(progress);
     if (i > 0) {
+      let progress = `working on ${i} of ${csvData.length-1}`;
+      console.log(progress);
       for (let j = 0; j < textLayout.length; j++) {
         let textInfo = textLayout[j];
         let size = textInfo[4];
@@ -64,8 +66,19 @@ function makePDF() {
     }
   }
   doc.end();
+
+  function onStartedDownload(id) {
+    console.log(`Started downloading: ${id}`);
+  }
+
+  function onFailed(error) {
+    console.log(`Download failed: ${error}`);
+  }
+
   stream.on('finish', function() {
-    const blob = stream.toBlobURL('application/pdf');
-    window.open(blob);
+    const blob = stream.toBlob('application/pdf');
+    downloadUrl = URL.createObjectURL( blob );
+    downloadButton.setAttribute( "href", downloadUrl );
+    downloadButton.innerText = "Download PDF";
   });
 }
