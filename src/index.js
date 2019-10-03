@@ -34,12 +34,8 @@ function makePDF() {
   // create a document and pipe to a blob
   var doc = new PDFDocument(docDefinition);
   var stream = doc.pipe(blobStream());
-  // var stream = doc.pipe(fs.createWriteStream('output.pdf'));
 
-  // doc.pageSize(User.width * 72, User.height * 72);
-  // doc.layout('landscape');
   doc.registerFont('Roboto', 'fonts/Roboto-Regular.ttf')
-  // doc.fontSize(25).text('Here is some vector graphics...', 100, 80);
 
   function getString(item, card) {
     if (item === 0) return User.name;
@@ -50,12 +46,12 @@ function makePDF() {
     if (item === 5) return (`${csvData[card][3]}, ${csvData[card][4]} ${csvData[card][5]}`);
   }
 
-  for( let i = 0; i < csvData.length; i++ ) {
-    let row = i%(textLayout.length);
+  for (let i = 0; i < csvData.length; i++) {
+    let row = i % (textLayout.length);
     let progress = `working on ${i} of ${csvData.length}`;
     console.log(progress);
-    if( i > 0 ) {
-      for ( let j = 0; j < textLayout.length; j++) {
+    if (i > 0) {
+      for (let j = 0; j < textLayout.length; j++) {
         let textInfo = textLayout[j];
         let size = textInfo[4];
         let x = textInfo[0];
@@ -64,14 +60,12 @@ function makePDF() {
         doc.fontSize(size);
         doc.text(`${str}`, x, y);
       }
-      if ( i+1 < csvData.length) doc.addPage();
+      if (i + 1 < csvData.length) doc.addPage();
     }
   }
   doc.end();
   stream.on('finish', function() {
     const blob = stream.toBlobURL('application/pdf');
     window.open(blob);
-    // iframe.src = stream.toBlobURL('application/pdf');
   });
 }
-

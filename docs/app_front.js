@@ -4,6 +4,7 @@ const envelope = document.querySelector('#envelope');
 const canvas = document.querySelector('#canvas');
 const addressReturn = document.querySelector('#address_return');
 const addressDest = document.querySelector('#address_destination');
+const dataBar = document.querySelector('#data');
 const ctx = canvas.getContext('2d');
 const pdfDPI = 72;
 let canvasX;
@@ -14,11 +15,9 @@ let User = { height: "5", width: "9.5" };
 let textLayout = [];
 
 function center(parent, child) {
-  // console.log({ parent, child });
   let marginX = (parent.offsetWidth - child.offsetWidth) / 2;
   let marginY = (parent.offsetHeight - child.offsetHeight) / 2;
   if (parent === canvas) {
-    // console.log("parent = canvas");
     originX = marginX;
     originY = marginY;
     marginX += parent.offsetLeft;
@@ -26,7 +25,23 @@ function center(parent, child) {
   }
   child.style.left = marginX + "px";
   child.style.top = marginY + "px";
-  // console.log({ moveX, moveY });
+}
+
+function testSample() {
+  //add data
+  csvData = [
+    ["first_name","last_name","address","city","state","zip"],
+    ["James","Butt","6649 N Blue Gum St","New Orleans","LA","70116"],
+    ["Josephine","Darakjy","4 B Blue Ridge Blvd","Brighton","MI","48116"],
+    ["Art","Venere","8 W Cerritos Ave #54","Bridgeport","NJ","80142"],
+    ["Lenna","Paprocki","639 Main St","Anchorage","AK","99501"]
+  ];
+  User.name = "John Doe";
+  User.address = "123 Madison St";
+  User.city = "New Orleans, LA 70116";
+  User.width = 9;
+  User.height = 4.5;
+  setup();
 }
 
 function canvasInit(x = 1000, y = 500) {
@@ -73,9 +88,37 @@ function setup() {
   if (User.address) document.querySelector('#r2').innerText = User.address;
   if (User.city) document.querySelector('#r3').innerText = User.city;
   center(canvas, envelope);
-  // center(envelope, addressDest);
   displayGridLines();
+  displayStatus();
 }
+
+function displayStatus() {
+  let message = "";
+  let csvReady = (csvData.length > 0) ? true : false;
+  let userReady = (User.name == undefined) ? false : true;
+  if (userReady) {
+    message += `Envelope dimensions are ${User.width}in wide by ${User.height}in high. `;
+  }
+  else {
+    message += "Please enter dimensions & return address. ";
+  }
+  if (csvReady) {
+    message += `Ready to label ${csvData.length -1} envelopes. `;
+  }
+  else {
+    message += "Please select your CSV address file. ";
+  }
+  if (csvReady && userReady) {
+    message += "Press 'Create PDF'!";
+    dataBar.style.background = "green";
+  }
+  else {
+    dataBar.style.background = "red";
+    message += "Or, 'Use Sample Data' instead";
+  }
+  dataBar.innerText = message;
+}
+
 
 function handleResize() {
   center(canvas, envelope);
@@ -88,7 +131,6 @@ function handleClick(e) {
 }
 
 function getCoords(origin) {
-  // console.log(origin);
   let xCoord = addOffsets("x", origin);
   let yCoord = addOffsets("y", origin);
 
@@ -97,17 +139,13 @@ function getCoords(origin) {
     for (let i = 0; i < 20; i++) {
       (dir === "x") ? offset += target.offsetLeft: offset += target.offsetTop;
       target = target.offsetParent;
-      // console.log(offset);
-      // console.log(target.id);
       if (target.id === "envelope") {
         i = 20;
       }
     }
     return offset;
   }
-  // console.log([xCoord, yCoord]);
   return [xCoord, yCoord];
-
 }
 
 function handleUser(e) {
@@ -117,7 +155,7 @@ function handleUser(e) {
     let value = e.target[i].value;
     User[name] = value;
   }
-  console.log(User);
+  // console.log(User);
   setup();
 }
 
@@ -145,43 +183,27 @@ adjustableDivs.forEach(adjustableDiv => adjustableDiv.addEventListener('click', 
 let csvData = [];
 
 document.querySelector("#file-input").addEventListener('change', function() {
-  // files that user has chosen
+
   let all_files = this.files;
   if (all_files.length == 0) {
     alert('Error : No file selected');
     return;
   }
-  // first file selected by user
+
   let file = all_files[0];
 
-  // files types allowed
+
   let allowed_types = ['text/csv'];
   if (allowed_types.indexOf(file.type) == -1) {
     alert('Error : Incorrect file type');
     return;
   }
 
-  // Max 2 MB allowed
-  let max_size_allowed = 2 * 1024 * 1024
-  if (file.size > max_size_allowed) {
-    alert('Error : Exceeded size 2MB');
-    return;
-  }
-  // file validation is successfull
-  // we will now read the file
   let reader = new FileReader();
 
-  // file reading started
-  reader.addEventListener('loadstart', function() {
-    // document.querySelector("#file-input-label").style.display = 'none'; 
-  });
-
-  // file reading finished successfully
   reader.addEventListener('load', function(e) {
     let text = e.target.result;
     processData(text);
-
-    // document.querySelector("#file-input-label").style.display = 'block'; 
   });
 
   function processData(csv) {
@@ -198,10 +220,6 @@ document.querySelector("#file-input").addEventListener('change', function() {
     }
     console.log(csvData);
   }
-  // read as text file
+
   reader.readAsText(file);
 });
-
-function pdfMagic() {
-  
-}

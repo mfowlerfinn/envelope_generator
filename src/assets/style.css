@@ -1,7 +1,8 @@
 html {
   box-sizing: border-box;
   font-size: 10px;
-  /*background: linear-gradient(0deg, #3f87a6 0%, #0d47a1 100%);*/
+/*   background: linear-gradient(0deg, #3f87a6 0%, #0d47a1 100%); */
+	background: linear-gradient(15deg, #4b6cb7 0%, #182848 100%);
   height: 100%;
 }
 
@@ -16,33 +17,33 @@ body {
   text-align: center;
   font-family: Monaco, monospace;
   /*background: gray;*/
+  height: 100%;
 }
 
 #site-container {
 /*	margin-top: 20px;*/
+height: 100%;
 }
 
 #file-input-label {
 	display: block;
-	background: red;
 }
 
 #display-container {
-	width: 100%;
-	/*display: flex;*/
-/*	flex-direction: row;*/
-	margin: auto;
-	display: block;
-	background: rgb(68, 68, 68);
+/* 	background: rgb(68, 68, 68); */
+  width: 100%;
+	height: 100%;
+	display:flex;
 }
 
 #controls{
-	background: gray;
 	margin: 0;
-	/*height: 50px;*/
 	width: 100%;
 	padding: 10px;
-	/*display: flex;*/
+/* 	height: 70px; */
+	position: absolute;
+	top: 0;
+	border-bottom: 1px solid black;
 }
 
 form {
@@ -51,24 +52,30 @@ form {
 }
 
 #canvas {
-	position: relative;
+/* 	position: relative; */
 	/*width:100%;*/
-	margin: 10px;
+	margin: auto;
 }
 
 #data {
-	background: gray;
-	height: 50px;
+	position: absolute;
+/* 	height: 70px; */
 	margin: 0;
+	bottom: 0;
 	width: 100%;
+	border-top: 1px solid black;
+	font-size: 15px;
+	padding: 5px;
 }
 
 .sidebar {
-	margin-right: 10px;
-	margin-left: 10px;
+/* 	margin-right: 10px; */
+/* 	margin-left: 10px; */
 	/*border: 2px solid black;*/
-	width: 50px;
+/* 	width: 50px; */
 	z-index: 1;
+	background: rgba(240,234,219,0.95);
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.4);
 }
 
 .workspace {
@@ -84,7 +91,8 @@ form {
 	position: absolute;
 	width: 800px;
 	height: 400px;
-	background: rgba(255,255,255,0.9);
+	background: rgba(255,255,255,0.9); 
+	background: rgba(240,234,219,0.9);
 	/*border: 2px solid black;*/
 	/*z-index: 2;*/
 	box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.4);
@@ -124,8 +132,6 @@ form {
 }
 
 .address_dest_group{
-/*	display: flex;
-	flex-direction: column;*/
 	margin: auto;
 	margin-bottom: 3%;
 	text-align: left;
@@ -136,17 +142,10 @@ form {
 	top: 0;
 	right: 0;
 	border: 1px solid gray;
-	/*background: red;*/
 	width: calc(72px * (0.87));
 	height: calc(72px * (0.979));
 	margin: calc(72px * (0.125));
 	text-align: center;
-
-}
-
-.name {
-	/*font-size: 120%;*/
-	/*font-weight: 600;*/
 }
 
 

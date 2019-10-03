@@ -3,11 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>pdf mock</title>
+  <title>Envelope Labeler</title>
   <link rel="stylesheet" href="./assets/style.css">
 </head>
 
-<body> 
+<body>
   <div id="site-container">
     <div id="display-container">
       <div id="controls" class="sidebar">
@@ -19,8 +19,9 @@
           <input id="city" name="city" type="text" placeholder="city, state zip" required>
           <input type="submit" name="submit the form" value="Update Envelope">
         </form>
+        <button id="run_sample" onclick="testSample()">Use Sample Data</button>
         <input type="file" id="file-input" accept="text/csv" value="test">
-        <button id="run" onclick="pdfMagic()">Create PDF</button>
+        <button id="run">Create PDF</button>
       </div>
       <canvas id="canvas" class="workspace adjust">CANVAS NOT SUPPORTED
       </canvas>
@@ -39,11 +40,13 @@
         </div>
         <div id="stamp"></div>
       </div>
-      <div id="data" class="sidebar"></div>
+      <div id="data" class="sidebar">
+      </div>
     </div>
   </div>
   <script type="text/javascript" src="./app_front.js"></script>
-   </script>
+  </script>
+  <script type="text/javascript" src="pdf.bundle.js"></script>
 </body>
 
 </html>
